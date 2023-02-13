@@ -16,3 +16,4 @@ Running ```main.py``` updates the subreddit TEAM_SUBREDDIT. Three Markdown table
 * Work on stylesheet
 * Add team logos instead of name
 * Add playoff and tank mode
+* Make compatible with RES nightmode
