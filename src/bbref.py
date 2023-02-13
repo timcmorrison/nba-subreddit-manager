@@ -108,15 +108,3 @@ def get_schedule(url):
     schedule = schedule.to_markdown(index=False)
     schedule = "\n\n|SCHEDULE|\n|:--:|\n\n" + schedule
     return schedule
-
-
-def update_sidebar(new_content):
-    reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
-    subreddit = reddit.subreddit(TEAM_SUBREDDIT)
-
-    old_sidebar = subreddit.wiki["config/sidebar"]
-    old_sidebar.edit(content=new_content)
-
-    widgets = subreddit.widgets.sidebar
-    new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-    widgets[0] = widgets[0].mod.update(text=new_content, styles=new_styles)
