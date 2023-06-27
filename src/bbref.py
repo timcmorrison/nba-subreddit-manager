@@ -1,3 +1,5 @@
+"""Basketball-Reference utilities"""
+
 import re
 from datetime import datetime
 
@@ -10,31 +12,33 @@ TEAM_ABBREVIATION = 'SAS'
 TEAM_SUBREDDIT = 'SpursTest'
 
 
-# Seems redundant with standings table so not used currently...
 def get_record(url):
+    """Returns the team's record.
+
+    :param str url: The basketball-reference URL to the team page.
+    """
+
     team_html = requests.get(url).text
     team_info = BeautifulSoup(team_html, 'html.parser').find(id="info")
-
-    # Get only the text containing the team record
     team_record = team_info.find_all("p")[2].text
-
-    # Remove unwanted newlines & tabs, make text a Markdown heading
     team_record = re.sub('\\s+', ' ', team_record)
     team_record = '#' + team_record.strip() + '\n\n'
     return team_record
 
 
 def get_roster(url):
+    """Returns the team's roster.
+    
+    :param str url: The basketball-reference URL to the team page.
+    """
+
     roster = pd.read_html(url)[0]
-
-    # Due to width of reddit sidebars, only want number, name, and position
-    # (the first 3 columns)
+    # Only want number, name, and position (the first 3 columns) so it fits
+    # in sidebar
     roster = roster.iloc[:, :3]
-
     # Players without numbers probably don't need to be included
     # (two-way players who have never gotten minutes, etc.)
     roster = roster.dropna()
-
     roster = roster.set_index('No.')
     roster = roster.to_markdown()
     roster = "\n\n|ROSTER|\n|:--:|\n\n" + roster
@@ -42,6 +46,11 @@ def get_roster(url):
 
 
 def get_standings(url):
+    """Returns standings of team's conference.
+
+    :param str url: The basketball-reference URL to the NBA standings page.
+    """
+
     eastern_conference = ['ATL', 'BOS', 'BRK', 'CHO', 'CHI', 'CLE', 'DET',
                           'IND', 'MIA', 'MIL', 'NYK', 'ORL', 'PHI', 'TOR',
                           'WAS']
@@ -75,20 +84,38 @@ def get_standings(url):
 
 
 def get_schedule(url):
+    """ Returns the team's schedule.
+
+    :param str url: The basketball-reference URL to the team's schedule
+    """
+
     schedule = pd.read_html(url)[0]
-    # [0] Game; [1] Date; [2] Start (ET); [3] BLANK; [4] Box Score Link; [5] @;
-    # [6] Opponent; [7] W/L; [8] OT; [9] Team Score; [10] Opponent Score;
-    # [11] Win counter; [12] Loss counter; [13] Streak; [14] Notes
+    # The schedule DataFrame columns are as follows:
+    # [0] Game
+    # [1] Date
+    # [2] Start (ET)
+    # [3] BLANK
+    # [4] Box Score Link
+    # [5] @
+    # [6] Opponent
+    # [7] W/L
+    # [8] OT
+    # [9] Team Score
+    # [10] Opponent Score
+    # [11] Win counter
+    # [12] Loss counter
+    # [13] Streak
+    # [14] Notes
 
     # Table repeats the headings every 20 games
     schedule.drop([20, 41, 62, 83], inplace=True)
 
-    index = bbref_helper.get_game_index(schedule)
+    index = get_game_index(schedule)
     schedule = schedule.iloc[index:index+10]
 
     # FIRST COLUMN: Full date and start time
     schedule.iloc[:, 1] = schedule.iloc[:, 1].str[:-6]
-    schedule['Date'] = schedule['Date'].apply(bbref_helper.to_ordinal)
+    schedule['Date'] = schedule['Date'].apply(to_ordinal)
     schedule.iloc[:, 1] = schedule.iloc[:, 1] + '; ' + schedule.iloc[:, 2] + 'm'
 
     # SECOND COLUMN: Team (vs. OR @) Opponent
@@ -110,6 +137,7 @@ def get_schedule(url):
 
 
 def get_year():
+    """Returns the current season year."""
     date = datetime.today()
     if date.month < 7:
         return str(date.year)
@@ -118,12 +146,18 @@ def get_year():
 
 
 def to_ordinal(date):
+    """Returns the ordinal representation of the date.
+
+    :param str date: The date to be converted.
+    
+    E.g. Janurary 1 -> January 1st
+    """
     day = int(date[-2:])
     ones_place = int(date[-1:])
 
     if 10 < day < 20:
         return date + 'th'
-
+    
     if ones_place == 1:
         return date + 'st'
     elif ones_place == 2:
@@ -134,8 +168,14 @@ def to_ordinal(date):
         return date + 'th'
 
 
-# Want to display previous 5 games + 5 next games
 def get_game_index(df):
+    """Returns the index for the 5th most recent game.
+    
+    :param DataFrame df: The schedule.
+
+    We want to show the previous 5 games and their result, as well as the next
+    5 upcoming games.
+    """
     nan_values = df[df['Tm'].isna()]
     index = nan_values.index[0] - 7
     if index < 0:

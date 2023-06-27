@@ -1,13 +1,16 @@
+"""NBA team subreddit manager"""
+
 import praw
 
 import bbref
-import bbref_helper
 
 TEAM_ABBREVIATION = 'SAS'
 TEAM_SUBREDDIT = 'SpursTest'
 
 
 def main():
+    """Update the subreddit."""
+
     year = bbref_helper.get_year()
     base_url = 'https://www.basketball-reference.com/'
 
@@ -22,6 +25,10 @@ def main():
 
 
 def update_sidebar(new_content):
+    """Updates the sidebar.
+    
+    :param str new_content: Sidebar text.
+    """
     reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
     subreddit = reddit.subreddit(TEAM_SUBREDDIT)
 
