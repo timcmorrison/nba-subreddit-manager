@@ -1,12 +1,9 @@
 """NBA team subreddit manager"""
 
-import praw
-
 import bbref
 import reddit
 
 TEAM_ABBREVIATION = 'SAS'
-TEAM_SUBREDDIT = 'SpursTest'
 
 
 def main():

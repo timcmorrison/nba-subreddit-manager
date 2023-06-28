@@ -1,3 +1,10 @@
+"""Reddit utilities"""
+    
+import praw
+
+TEAM_SUBREDDIT = 'SpursTest'
+
+    
 def to_heading(heading, level):
     """Returns the string as a Markdown heading.
     
