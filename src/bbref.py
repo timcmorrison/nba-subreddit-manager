@@ -33,10 +33,10 @@ def get_roster(url):
 
     roster = pd.read_html(url)[0]
     # Only want number, name, and position (the first 3 columns) so it fits
-    # in sidebar
+    # in sidebar.
     roster = roster.iloc[:, :3]
     # Players without numbers probably don't need to be included
-    # (two-way players who have never gotten minutes, etc.)
+    # (two-way players who have never gotten minutes, etc.).
     roster = roster.dropna()
     roster = roster.set_index('No.')
     roster = roster.to_markdown()
@@ -65,15 +65,15 @@ def get_standings(url):
     else:
         return "ERROR: get_standings() TEAM_ABBREVIATION"
 
-    # Drop unneeded columns (mostly due to sidebar width)
+    # Drop unneeded columns (mostly due to sidebar width).
     standings.drop(['W/L%', 'PS/G', 'PA/G', 'SRS'], axis=1, inplace=True)
 
     standings.columns = ['Team', 'W', 'L', 'GB']
     standings.index += 1
     standings.index.name = 'Seed'
 
-    # Having the seed in parentheses is redundant, just use index
-    # It makes more sense to have seed to the left of the team name anyway
+    # Having the seed in parentheses is redundant, just use index.
+    # It makes more sense to have seed to the left of the team name anyway.
     standings['Team'] = [re.sub(r'\([^)]*\)', '',
                                 str(x)) for x in standings['Team']]
 
@@ -85,7 +85,7 @@ def get_standings(url):
 def get_schedule(url):
     """ Returns the team's schedule.
 
-    :param str url: The basketball-reference URL to the team's schedule
+    :param str url: The basketball-reference URL to the team's schedule.
     """
 
     schedule = pd.read_html(url)[0]
@@ -106,27 +106,28 @@ def get_schedule(url):
     # [13] Streak
     # [14] Notes
 
-    # Table repeats the headings every 20 games
+    # Table repeats the headings every 20 games, so get rid of those headings.
     schedule.drop([20, 41, 62, 83], inplace=True)
 
     index = get_game_index(schedule)
     schedule = schedule.iloc[index:index+10]
 
-    # FIRST COLUMN: Full date and start time
+    # Now create the columns for the schedule table.
+    # 1st column: Full date and start time.
     schedule.iloc[:, 1] = schedule.iloc[:, 1].str[:-6]
     schedule['Date'] = schedule['Date'].apply(to_ordinal)
     schedule.iloc[:, 1] = schedule.iloc[:, 1] + '; ' + schedule.iloc[:, 2] + 'm'
 
-    # SECOND COLUMN: Team (vs. OR @) Opponent
+    # 2nd column: Team (vs. OR @) Opponent.
     schedule.iloc[:, 5].fillna('vs.', inplace=True)
     schedule.iloc[:, 2] = schedule.iloc[:, 5] + ' ' + schedule.iloc[:, 6]
 
-    # THIRD COLUMN: Team score - Opponent score -- W/L
+    # 3rd column: Team score - Opponent score -- W/L.
     schedule.iloc[:, 3] = schedule.iloc[:, 9] + ' - ' + schedule.iloc[:, 10] + \
         ' ' + '**' + schedule.iloc[:, 7] + '**'
     schedule = schedule.fillna("")
 
-    # Columns are prepared - drop the rest and make it Reddit-ready
+    # Columns are prepared - drop the rest and make it Reddit-ready.
     schedule.drop(schedule.columns[[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]],
                   axis=1, inplace=True)
     schedule.columns = ['G', 'Date & Time (ET)', 'Opponent', 'Score']
@@ -137,11 +138,15 @@ def get_schedule(url):
 
 def get_year():
     """Returns the current season year."""
-    date = datetime.today()
-    if date.month < 7:
-        return str(date.year)
-    else:
-        return str(date.year + 1)
+
+    # Season year will either be current year or next year, e.g. the 2013-2014
+    # season should return 2014. So try next year first, and if that page
+    # can't be found, use the current year instead.
+    year = datetime.today().year + 1
+    url = 'https://www.basketball-reference.com/leagues/NBA_' + str(year) + '.html'
+    if requests.get(url).status_code == 404:
+        year = year - 1
+    return year
 
 
 def to_ordinal(date):
@@ -149,7 +154,7 @@ def to_ordinal(date):
 
     :param str date: The date to be converted.
     
-    E.g. Janurary 1 -> January 1st
+    E.g. Janurary 1 -> January 1st.
     """
     day = int(date[-2:])
     ones_place = int(date[-1:])
@@ -167,15 +172,21 @@ def to_ordinal(date):
         return date + 'th'
 
 
-def get_game_index(df):
-    """Returns the index for the 5th most recent game.
+def get_game_index(schedule):
+    """Returns the index for the first game to be displayed on the schedule.
     
-    :param DataFrame df: The schedule.
+    :param DataFrame schedule: The schedule.
 
-    We want to show the previous 5 games and their result, as well as the next
-    5 upcoming games.
+    Generally, we want to show the previous 5 games and their result, as well as
+    the next 5 upcoming games.
+    
+    If at the beginning of the season, just display the first 10 games.
+    
+    If at the end of the season, just display the last 10 games.
     """
-    nan_values = df[df['Tm'].isna()]
+    nan_values = schedule[schedule['Tm'].isna()]
+    if nan_values.empty:
+        return 71
     index = nan_values.index[0] - 7
     if index < 0:
         return 0
