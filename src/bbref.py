@@ -21,8 +21,7 @@ def get_record(url):
     team_html = requests.get(url).text
     team_info = BeautifulSoup(team_html, 'html.parser').find(id="info")
     team_record = team_info.find_all("p")[2].text
-    team_record = re.sub('\\s+', ' ', team_record)
-    team_record = '#' + team_record.strip() + '\n\n'
+    team_record = remove_whitespace(team_record)
     return team_record
 
 
@@ -183,3 +182,15 @@ def get_game_index(df):
     if index > 71:
         return 71
     return index
+
+
+def remove_whitespace(string):
+    """Returns a string with excess whitespace removed.
+    
+    :param str string: The string.
+    
+    Words are still separated by a single space, but leading and trailing
+    whitespace is removed, as are any other spaces, tabs, and newlines.
+    """
+    string = re.sub('\\s+', ' ', string)
+    return string.strip()
