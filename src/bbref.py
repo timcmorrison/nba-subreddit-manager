@@ -108,6 +108,7 @@ def get_schedule(url):
 
     # Table repeats the headings every 20 games, so get rid of those headings.
     schedule.drop([20, 41, 62, 83], inplace=True)
+    schedule.reset_index(drop=True, inplace=True)
 
     index = get_game_index(schedule)
     schedule = schedule.iloc[index:index+10]
@@ -184,14 +185,15 @@ def get_game_index(schedule):
     
     If at the end of the season, just display the last 10 games.
     """
+
     nan_values = schedule[schedule['Tm'].isna()]
     if nan_values.empty:
-        return 71
-    index = nan_values.index[0] - 7
-    if index < 0:
+        return 72
+    index = nan_values.index[0] - 5
+    if index <= 0:
         return 0
-    if index > 71:
-        return 71
+    if index >= 72:
+        return 72
     return index
 
 
