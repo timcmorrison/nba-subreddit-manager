@@ -4,9 +4,10 @@ import re
 from datetime import datetime
 
 import pandas as pd
-import praw
 import requests
 from bs4 import BeautifulSoup
+
+import reddit
 
 TEAM_ABBREVIATION = 'SAS'
 TEAM_SUBREDDIT = 'SpursTest'
@@ -39,8 +40,7 @@ def get_roster(url):
     # (two-way players who have never gotten minutes, etc.).
     roster = roster.dropna()
     roster = roster.set_index('No.')
-    roster = roster.to_markdown()
-    roster = "\n\n|ROSTER|\n|:--:|\n\n" + roster
+    roster = reddit.create_table(roster, "ROSTER")
     return roster
 
 
@@ -63,7 +63,8 @@ def get_standings(url):
     elif TEAM_ABBREVIATION in western_conference:
         standings = pd.read_html(url)[1]
     else:
-        return "ERROR: get_standings() TEAM_ABBREVIATION"
+        return "Error: get_standings() TEAM_ABBREVIATION"
+        quit()
 
     # Drop unneeded columns (mostly due to sidebar width).
     standings.drop(['W/L%', 'PS/G', 'PA/G', 'SRS'], axis=1, inplace=True)
@@ -77,8 +78,7 @@ def get_standings(url):
     standings['Team'] = [re.sub(r'\([^)]*\)', '',
                                 str(x)) for x in standings['Team']]
 
-    standings = standings.to_markdown()
-    standings = "\n\n|STANDINGS|\n|:--:|\n\n" + standings
+    standings = reddit.create_table(standings, "STANDINGS")
     return standings
 
 
@@ -132,8 +132,7 @@ def get_schedule(url):
     schedule.drop(schedule.columns[[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]],
                   axis=1, inplace=True)
     schedule.columns = ['G', 'Date & Time (ET)', 'Opponent', 'Score']
-    schedule = schedule.to_markdown(index=False)
-    schedule = "\n\n|SCHEDULE|\n|:--:|\n\n" + schedule
+    schedule = reddit.create_table(schedule, "SCHEDULE")
     return schedule
 
 

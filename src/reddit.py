@@ -1,5 +1,6 @@
 """Reddit utilities"""
     
+import pandas as pd
 import praw
 
 TEAM_SUBREDDIT = 'SpursTest'
@@ -18,6 +19,17 @@ def to_heading(heading, level):
         for i in range(1, level):
             heading = '#' + heading
     return heading + '\n\n'
+
+
+def create_table(df, table_heading):
+    """Converts DataFrame to Markdown table.
+
+    :param DataFrame df: The DataFrame.
+
+    :param str table_heading: Table heading.
+    """
+    df = df.to_markdown()
+    return '\n\n|' + table_heading + '|\n|:--:|\n\n' + df
 
 
 def update_sidebar(new_content):
