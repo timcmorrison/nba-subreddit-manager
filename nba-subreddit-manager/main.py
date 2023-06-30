@@ -1,6 +1,7 @@
 """NBA team subreddit manager"""
 
-import bbref
+import sys
+
 import nba
 import reddit
 
@@ -8,8 +9,10 @@ import reddit
 def main():
     """Update the subreddit."""
 
-    team = nba.Team("Spurs")
-    reddit.update_sidebar("SpursTest", team)
+    subreddit = sys.argv[1]
+    team_name = sys.argv[2]
+    team = nba.Team(team_name)
+    reddit.update_sidebar(subreddit, team)
 
 
 if __name__ == "__main__":
