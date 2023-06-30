@@ -1,10 +1,11 @@
-# NBA Subreddit Bot
------
+# NBA Team Subreddit Manager
 
-Originally made for [r/NBASpurs](https://reddit.com/r/NBASpurs)
+<img src="https://styles.redditmedia.com/t5_2qo4s/styles/communityIcon_1podsfdai4301.png" alt="NBA Reddit Logo" align="right" width=200>
+
+Automatically update a subreddit's sidebar with useful information about your favorite team. Originally made for [r/NBASpurs](https://reddit.com/r/NBASpurs).
 
 ### Current Features
-Running ```main.py``` updates the subreddit TEAM_SUBREDDIT. Three Markdown tables are created in the sidebar:
+Running ```main.py``` updates the specified subreddit with information about the chosen team. Three Markdown tables are created in the sidebar:
 1. Schedule: Previous 5 games as well as the next 5 upcoming games - includes the game number (out of 82), date & time, the opponent, and the score & result if the game has already happened
 2. Standings: Standings of the team's conference - includes each team's seed, record, and games behind
 3. Roster: Current players on the team - includes their jersey number and position
