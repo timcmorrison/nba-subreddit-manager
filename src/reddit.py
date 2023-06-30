@@ -3,9 +3,10 @@
 import pandas as pd
 import praw
 
-TEAM_SUBREDDIT = 'SpursTest'
+import bbref
+import nba
 
-    
+
 def to_heading(heading, level):
     """Returns the string as a Markdown heading.
     
@@ -32,17 +33,77 @@ def create_table(df, table_heading):
     return '\n\n|' + table_heading + '|\n|:--:|\n\n' + df
 
 
-def update_sidebar(new_content):
+def update_sidebar(subreddit, team):
     """Updates the sidebar.
     
-    :param str new_content: Sidebar text.
-    """
-    reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
-    subreddit = reddit.subreddit(TEAM_SUBREDDIT)
+    :param str subreddit: Subreddit to update.
 
+    :param Team team: NBA team to update sidebar with.
+    """
+
+    reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
+    subreddit = reddit.subreddit(subreddit)
+    update_old_reddit(subreddit, team)
+    update_new_reddit(subreddit, team)
+
+
+def update_old_reddit(subreddit, team):
+    """Updates the old layout, old.reddit.com.
+    
+    :param Subreddit subreddit: Subreddit to update.
+
+    :param Team team: NBA team to update sidebar with.
+    """
+
+    roster_df = bbref.get_roster(team.abbreviation)
+    standings_df = bbref.get_standings(team.conference)
+    schedule_df = bbref.get_schedule(team.abbreviation)
+    roster = make_old_roster(roster_df)
+    standings = make_old_standings(standings_df)
+    schedule = make_old_schedule(schedule_df)    
     old_sidebar = subreddit.wiki["config/sidebar"]
-    old_sidebar.edit(content=new_content)
+    old_sidebar.edit(content=schedule+standings+roster)
+
+
+def update_new_reddit(subreddit, team):
+    """Updates redesigned layout, new.reddit.com.
+    
+    :param Subreddit subreddit: Subreddit to update.
+
+    :param Team team: NBA team to update sidebar with.
+    """
 
     widgets = subreddit.widgets.sidebar
     new_styles = {"backgroundColor": "#FFFFFF", "headerColor": "#FF9900"}
-    widgets[0] = widgets[0].mod.update(text=new_content, styles=new_styles)
+    widgets[0] = widgets[0].mod.update(text="PLACEHOLDER", styles=new_styles)   
+
+
+def make_old_roster(roster):
+    """Returns the roster table formatted for old reddit
+
+    :param DataFrame roster: roster.
+    """
+
+    roster = create_table(roster, "ROSTER")
+    # Players without numbers will have "nan". Trying to handle it with pandas 
+    # introduced other issues, this ended up being easier.
+    roster = roster.replace("nan", "")
+    return roster
+
+
+def make_old_standings(standings):
+    """Returns the standings table formatted for old reddit
+
+    :param DataFrame standings: standings.
+    """
+
+    return create_table(standings, "STANDINGS")
+
+
+def make_old_schedule(schedule):
+    """Returns the schedule table formatted for old reddit
+
+    :param DataFrame schedule: schedule.
+    """
+
+    return create_table(schedule, "SCHEDULE")
