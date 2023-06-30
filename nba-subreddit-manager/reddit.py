@@ -1,10 +1,9 @@
 """Reddit utilities"""
     
-import pandas as pd
-import praw
+import sys
 
 import bbref
-import nba
+import praw
 
 
 def to_heading(heading, level):
@@ -33,18 +32,24 @@ def create_table(df, table_heading):
     return '\n\n|' + table_heading + '|\n|:--:|\n\n' + df
 
 
-def update_sidebar(subreddit, team):
+def update_sidebar(subreddit_name, team):
     """Updates the sidebar.
     
-    :param str subreddit: Subreddit to update.
+    :param str subreddit_name: Subreddit to update.
 
     :param Team team: NBA team to update sidebar with.
     """
 
     reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
-    subreddit = reddit.subreddit(subreddit)
-    update_old_reddit(subreddit, team)
-    update_new_reddit(subreddit, team)
+    subreddit = reddit.subreddit(subreddit_name)
+
+    try:
+        update_old_reddit(subreddit, team)
+        update_new_reddit(subreddit, team)
+    except:
+        sys.exit("Can't update subreddit: \'" + subreddit_name + "\'.\n" + \
+                 "Make sure it is spelled correctly, you have access, and" + \
+                 " your praw.ini is configured correctly.")
 
 
 def update_old_reddit(subreddit, team):
