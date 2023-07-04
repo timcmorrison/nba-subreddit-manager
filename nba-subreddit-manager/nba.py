@@ -8,19 +8,30 @@ class Team:
 
         :param str name: Team name.
         """
-        
-        if name not in {"Hawks", "Celtics", "Nets", "Hornets", "Bulls",
+
+        self.name = check_name(name)
+        self.abbreviation = get_abbreviation(self.name)
+        self.conference = get_conference(self.name)
+
+
+def check_name(name):
+    """Checks that the team name is valid, and if so, returns it
+    
+    :param str name: Team name.
+    """
+
+    # Handle any capitalization, e.g. sPuRs -> Spurs
+    name = name.capitalize()
+
+    if name not in {"Hawks", "Celtics", "Nets", "Hornets", "Bulls",
                  "Cavaliers", "Pistons", "Pacers", "Heat", "Bucks", "Knicks",
                  "Magic", "76ers", "Raptors", "Wizards", "Mavericks", "Nuggets",
                  "Warriors", "Rockets", "Clippers", "Lakers", "Grizzlies",
                  "Timberwolves", "Pelicans", "Thunder", "Suns", "Trail Blazers",
                  "Kings", "Spurs", "Jazz"}:
-            sys.exit("class Team __init__(): Unrecognized team name: \'" + \
+            sys.exit("class Team __init__(): Unrecognized team name: \'" +
                     name + "\'")
-
-        self.name = name
-        self.abbreviation = get_abbreviation(name)
-        self.conference = get_conference(name)
+    return name
 
 
 def get_abbreviation(name):
@@ -89,6 +100,9 @@ def get_abbreviation(name):
         return 'SAS'
     elif name == "Jazz":
         return 'UTA'
+    else:
+        sys.exit("get_abbreviation(): Unrecognized team name: \'" + name + 
+                 "\'" )
 
 
 def get_conference(name):
