@@ -1,0 +1,7 @@
+team: spurs
+subreddit: spurstest
+calendar: abc123@group.calendar.google.com
+colors:
+  schedule: '#ffffff'
+  standings: '#ffffff'
+  roster: '#ffffff'

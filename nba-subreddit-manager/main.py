@@ -1,6 +1,6 @@
 """NBA team subreddit manager"""
 
-import sys
+import yaml
 
 import nba
 import reddit
@@ -9,10 +9,10 @@ import reddit
 def main():
     """Update the subreddit."""
 
-    subreddit = sys.argv[1]
-    team_name = sys.argv[2]
+    config = yaml.safe_load(open("config.yml"))
+    team_name = config['team']
     team = nba.Team(team_name)
-    reddit.update_sidebar(subreddit, team)
+    reddit.update_sidebar(config, team)
 
 
 if __name__ == "__main__":
