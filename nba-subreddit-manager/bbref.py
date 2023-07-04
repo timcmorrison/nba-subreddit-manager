@@ -50,7 +50,8 @@ def get_standings(conference):
     elif conference == "west":
         standings = get_html(url, 1)
     else:
-        sys.exit("get_standings(): Unrecognized conference: \'" + conference + "\'")
+        sys.exit("get_standings(): Unrecognized conference: \'" + conference 
+                 + "\'")
     # Drop unneeded columns (mostly due to sidebar width).
     standings = standings.drop(['W/L%', 'PS/G', 'PA/G', 'SRS'], axis=1)
     standings.columns = ['Team', 'W', 'L', 'GB']
