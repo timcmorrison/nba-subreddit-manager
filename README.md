@@ -17,4 +17,6 @@ Running ```main.py``` updates the specified subreddit with information about the
 * Add team logos instead of name
 * Add playoff and tank mode
 * Make compatible with RES nightmode
-* Generate config from Docker and/or Flask web app
+* Generate config from Docker and/or Flask web app UI
+* Embed new and old reddit pages or show screenshots
+* Indicate time of last update and if updated successfully
