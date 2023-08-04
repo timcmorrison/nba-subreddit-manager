@@ -13,8 +13,10 @@ Running ```main.py``` updates the specified subreddit with information about the
 ### To-do
 * Automatically run at a specified time
 * Containerize
-* Make layout for new reddit look better
 * Work on stylesheet
 * Add team logos instead of name
 * Add playoff and tank mode
 * Make compatible with RES nightmode
+* Generate config from Docker and/or Flask web app UI
+* Embed new and old reddit pages or show screenshots
+* Indicate time of last update and if updated successfully
