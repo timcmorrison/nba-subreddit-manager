@@ -2,7 +2,6 @@
     
 import sys
 
-import bbref
 import praw
 
 
@@ -61,12 +60,9 @@ def update_old_reddit(subreddit, team):
     :param Team team: NBA team to update sidebar with.
     """
 
-    roster_df = bbref.get_roster(team.abbreviation)
-    standings_df = bbref.get_standings(team.conference)
-    schedule_df = bbref.get_schedule(team.abbreviation)
-    roster = make_old_roster(roster_df)
-    standings = make_old_standings(standings_df)
-    schedule = make_old_schedule(schedule_df)    
+    roster = make_old_roster(team.roster)
+    standings = make_old_standings(team.standings)
+    schedule = make_old_schedule(team.schedule)    
     old_sidebar = subreddit.wiki["config/sidebar"]
     old_sidebar.edit(content=schedule+standings+roster)
 
@@ -199,7 +195,7 @@ def update_new_roster(widgets, sidebar, team, style):
     """
 
     roster = find_widget(sidebar, "Roster")
-    table = bbref.get_roster(team.abbreviation).to_markdown().replace("nan", "")
+    table = team.roster.to_markdown().replace("nan", "")
     if roster is None:
         make_new_roster(widgets, style, table)
     else:
@@ -219,7 +215,7 @@ def update_new_standings(widgets, sidebar, team, style):
     """
 
     standings = find_widget(sidebar, "Standings")
-    table = bbref.get_standings(team.conference).to_markdown()
+    table = team.conference.to_markdown()
     if standings is None:
         make_new_standings(widgets, style, table)
     else:

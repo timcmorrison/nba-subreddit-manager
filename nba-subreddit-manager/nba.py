@@ -2,6 +2,9 @@
 
 import sys
 
+import bbref
+
+
 class Team:
     def __init__(self, name):
         """Creates a new Team object.
@@ -12,6 +15,9 @@ class Team:
         self.name = check_name(name)
         self.abbreviation = get_abbreviation(self.name)
         self.conference = get_conference(self.name)
+        self.roster = bbref.get_roster(self.abbreviation)
+        self.standings = bbref.get_standings(self.conference)
+        self.schedule = bbref.get_schedule(self.abbreviation)
 
 
 def check_name(name):
