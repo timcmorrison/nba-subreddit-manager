@@ -104,11 +104,7 @@ def make_old_roster(roster):
     :param DataFrame roster: Roster.
     """
 
-    roster = create_table(roster, "ROSTER")
-    # Players without numbers will have "nan". Trying to handle it with pandas 
-    # introduced other issues, this ended up being easier.
-    roster = roster.replace("nan", "")
-    return roster
+    return create_table(roster, "ROSTER")
 
 
 def make_old_standings(standings):
@@ -195,7 +191,7 @@ def update_new_roster(widgets, sidebar, team, style):
     """
 
     roster = find_widget(sidebar, "Roster")
-    table = team.roster.to_markdown().replace("nan", "")
+    table = team.roster.to_markdown()
     if roster is None:
         make_new_roster(widgets, style, table)
     else:

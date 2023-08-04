@@ -34,6 +34,7 @@ def get_roster(team_abbreviation):
     # Only want number, name, and position (the first 3 columns) so it fits
     # in sidebar.
     roster = roster.iloc[:, :3]
+    roster['No.'] = roster['No.'].fillna('')
     roster = roster.set_index('No.')
     return roster
 
@@ -61,6 +62,7 @@ def get_standings(conference):
     # It makes more sense to have seed to the left of the team name anyway.
     standings['Team'] = [re.sub(r'\([^)]*\)', '',
                                 str(x)) for x in standings['Team']]
+    standings['GB'] = standings['GB'].fillna('')
     return standings
 
 
