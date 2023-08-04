@@ -215,7 +215,7 @@ def update_new_standings(widgets, sidebar, team, style):
     """
 
     standings = find_widget(sidebar, "Standings")
-    table = team.conference.to_markdown()
+    table = team.standings.to_markdown()
     if standings is None:
         make_new_standings(widgets, style, table)
     else:
