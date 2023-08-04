@@ -22,15 +22,14 @@ def check_name(name):
 
     # Handle any capitalization, e.g. sPuRs -> Spurs
     name = name.capitalize()
-
-    if name not in {"Hawks", "Celtics", "Nets", "Hornets", "Bulls",
-                 "Cavaliers", "Pistons", "Pacers", "Heat", "Bucks", "Knicks",
-                 "Magic", "76ers", "Raptors", "Wizards", "Mavericks", "Nuggets",
-                 "Warriors", "Rockets", "Clippers", "Lakers", "Grizzlies",
-                 "Timberwolves", "Pelicans", "Thunder", "Suns", "Trail Blazers",
-                 "Kings", "Spurs", "Jazz"}:
-            sys.exit("class Team __init__(): Unrecognized team name: \'" +
-                    name + "\'")
+    team_names = {"Hawks", "Celtics", "Nets", "Hornets", "Bulls", "Cavaliers", 
+                  "Pistons", "Pacers", "Heat", "Bucks", "Knicks", "Magic", 
+                  "76ers", "Raptors", "Wizards", "Mavericks", "Nuggets", 
+                  "Warriors", "Rockets", "Clippers", "Lakers", "Grizzlies", 
+                  "Timberwolves", "Pelicans", "Thunder", "Suns", 
+                  "Trail Blazers", "Kings", "Spurs", "Jazz"}
+    if name not in team_names:
+        sys.exit(f"class Team __init__(): Unrecognized team name: '{name}'")
     return name
 
 
@@ -101,8 +100,7 @@ def get_abbreviation(name):
     elif name == "Jazz":
         return 'UTA'
     else:
-        sys.exit("get_abbreviation(): Unrecognized team name: \'" + name + 
-                 "\'" )
+        sys.exit(f"get_abbreviation(): Unrecognized team name: '{name}'")
 
 
 def get_conference(name):
@@ -111,14 +109,16 @@ def get_conference(name):
     :param str name: Team name.
     """
     
-    if name in {"Hawks", "Celtics", "Nets", "Hornets", "Bulls", "Cavaliers",
-            "Pistons", "Pacers", "Heat", "Bucks", "Knicks", "Magic", "76ers",
-            "Raptors", "Wizards"}:
+    eastern_teams = {"Hawks", "Celtics", "Nets", "Hornets", "Bulls", 
+                     "Cavaliers", "Pistons", "Pacers", "Heat", "Bucks", 
+                     "Knicks", "Magic", "76ers", "Raptors", "Wizards"}
+    western_teams = {"Mavericks", "Nuggets", "Warriors", "Rockets", "Clippers", 
+                     "Lakers", "Grizzlies", "Timberwolves", "Pelicans", 
+                     "Thunder", "Suns", "Trail Blazers", "Kings", "Spurs", 
+                     "Jazz"}
+    if name in eastern_teams:
         return "east"
-    
-    elif name in {"Mavericks", "Nuggets", "Warriors", "Rockets", "Clippers",
-            "Lakers", "Grizzlies", "Timberwolves", "Pelicans", "Thunder",
-            "Suns", "Trail Blazers", "Kings", "Spurs", "Jazz"}:
+    elif name in western_teams:
         return "west"
     else:
-        sys.exit("get_conference(): Unrecognized team name: \'" + name + "\'")
+        sys.exit(f"get_conference(): Unrecognized team name: '{name}'")

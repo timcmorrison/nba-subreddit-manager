@@ -29,7 +29,7 @@ def create_table(df, table_heading):
     :param str table_heading: Table heading.
     """
     df = df.to_markdown()
-    return '\n\n|' + table_heading + '|\n|:--:|\n\n' + df
+    return f'\n\n|{table_heading}|\n|:--:|\n\n{df}'
 
 
 def update_sidebar(config, team):

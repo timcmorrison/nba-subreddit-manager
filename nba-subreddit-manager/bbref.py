@@ -50,8 +50,7 @@ def get_standings(conference):
     elif conference == "west":
         standings = get_html(url, 1)
     else:
-        sys.exit("get_standings(): Unrecognized conference: \'" + conference 
-                 + "\'")
+        sys.exit(f"get_standings(): Unrecognized conference: '{conference}'")
     # Drop unneeded columns (mostly due to sidebar width).
     standings = standings.drop(['W/L%', 'PS/G', 'PA/G', 'SRS'], axis=1)
     standings.columns = ['Team', 'W', 'L', 'GB']
@@ -123,8 +122,7 @@ def get_year():
     # season should return 2014. So try next year first, and if that page
     # can't be found, use the current year instead.
     year = datetime.today().year + 1
-    url = 'https://www.basketball-reference.com/leagues/NBA_' + str(year) + \
-        '.html'
+    url = f'https://www.basketball-reference.com/leagues/NBA_{year}.html'
     if check_404(url):
         year = year - 1
     return year
@@ -198,14 +196,14 @@ def get_team_url(team):
     """
 
     base = 'https://www.basketball-reference.com/'
-    return base + 'teams/' + team + '/' + str(get_year()) + '.html'
+    return f'{base}teams/{team}/{get_year()}.html'
 
 
 def get_standings_url():
     """Returns the URL to the NBA standings page."""
 
     base = 'https://www.basketball-reference.com/'
-    return base + 'leagues/NBA_' + str(get_year()) + '_standings.html'
+    return f'{base}leagues/NBA_{get_year()}_standings.html'
 
 
 def get_schedule_url(team):
@@ -215,7 +213,7 @@ def get_schedule_url(team):
     """
 
     base = 'https://www.basketball-reference.com/'
-    return base + 'teams/' + team + '/' + str(get_year()) + '_games.html'
+    return f'{base}teams/{team}/{get_year()}_games.html'
 
 
 def get_html(url, index):
@@ -228,7 +226,7 @@ def get_html(url, index):
 
     html = pd.read_html(url)[index]
     if check_404(url):
-        sys.exit("get_html(): \'" + url + "\' can't be found")
+        sys.exit(f"get_html(): '{url}' can't be found")
     return html
 
 
