@@ -115,15 +115,22 @@ def get_schedule(team):
     return schedule
 
 
-def get_year():
-    """Returns the current season year."""
+def get_year(url):
+    """Returns the current season year.
+    
+    :param str url: The URL to check.
+    """
 
     # Season year will either be current year or next year, e.g. the 2013-2014
     # season should return 2014. So try next year first, and if that page
-    # can't be found, use the current year instead.
+    # has issues, use the current year instead.
+
+    # Note: The url for each sidebar table is checked separately because some
+    # pages are updated earlier than others. E.g., the 2014 roster is available
+    # after the draft, but the 2014 schedule might not be available yet.
     year = datetime.today().year + 1
-    url = f'https://www.basketball-reference.com/leagues/NBA_{year}.html'
-    if check_404(url):
+    url = url.replace("YEAR", str(year))
+    if page_not_found(url) or table_not_found(url, 0):
         year = year - 1
     return year
 
@@ -195,15 +202,17 @@ def get_team_url(team):
     param str team: Team abbreviation.
     """
 
-    base = 'https://www.basketball-reference.com/'
-    return f'{base}teams/{team}/{get_year()}.html'
+    url = f'https://www.basketball-reference.com/teams/{team}/YEAR.html'
+    year = get_year(url)
+    return url.replace("YEAR", str(year))
 
 
 def get_standings_url():
     """Returns the URL to the NBA standings page."""
 
-    base = 'https://www.basketball-reference.com/'
-    return f'{base}leagues/NBA_{get_year()}_standings.html'
+    url = 'https://www.basketball-reference.com/leagues/NBA_YEAR_standings.html'
+    year = get_year(url)
+    return url.replace("YEAR", str(year))
 
 
 def get_schedule_url(team):
@@ -212,8 +221,24 @@ def get_schedule_url(team):
     param str team: Team abbreviation.
     """
 
-    base = 'https://www.basketball-reference.com/'
-    return f'{base}teams/{team}/{get_year()}_games.html'
+    url = f'https://www.basketball-reference.com/teams/{team}/YEAR_games.html'
+    year = get_year(url)
+    return url.replace("YEAR", str(year))
+
+
+def table_not_found(url, index):
+    """ Returns True if table cannot be found, False if it can.
+
+    :param str url: URL of page to be read.
+
+    :param int index: HTML table index.
+    """
+
+    try:
+        html = pd.read_html(url)[index]
+    except Exception as e:
+        return True
+    return False
 
 
 def get_html(url, index):
@@ -225,12 +250,12 @@ def get_html(url, index):
     """
 
     html = pd.read_html(url)[index]
-    if check_404(url):
+    if page_not_found(url):
         sys.exit(f"get_html(): '{url}' can't be found")
     return html
 
 
-def check_404(url):
+def page_not_found(url):
     """Returns True if page returns status code 404, False if not.
     
     :param str url: Page URL.
