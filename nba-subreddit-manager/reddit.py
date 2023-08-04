@@ -14,10 +14,10 @@ def to_heading(heading, level):
     """
 
     if 1 <= level <= 6:
-        heading = ' ' + heading
+        heading = f' {heading}'
         for i in range(1, level):
-            heading = '#' + heading
-    return heading + '\n\n'
+            heading = f'#{heading}'
+    return f'{heading}\n\n'
 
 
 def create_table(df, table_heading):
@@ -49,7 +49,7 @@ def update_sidebar(config, team):
         update_old_reddit(subreddit, team)
         update_new_reddit(subreddit, team, calendar_id, colors)
     except Exception as e:
-        sys.exit("update_sidebar(): " + str(e))
+        sys.exit(f"update_sidebar(): {e}")
 
 
 def update_old_reddit(subreddit, team):
@@ -167,14 +167,14 @@ def make_new_schedule(widgets, style, calendar_id):
         "showDescription": True,
         "showLocation": True,
         "showTime": True,
-        "showTitle": True,
+        "showTitle": True
     }
     widgets.mod.add_calendar(
         short_name="Schedule",
         google_calendar_id=calendar_id,
         requires_sync=True,
         configuration=config,
-        styles=style,
+        styles=style
     )
 
 
