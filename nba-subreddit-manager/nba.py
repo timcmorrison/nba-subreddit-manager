@@ -6,13 +6,13 @@ import bbref
 
 
 class Team:
-    def __init__(self, name):
+    def __init__(self, team_name):
         """Creates a new Team object.
 
-        :param str name: Team name.
+        :param str team_name: Team name.
         """
 
-        self.name = check_name(name)
+        self.name = check_name(team_name)
         self.abbreviation = get_abbreviation(self.name)
         self.conference = get_conference(self.name)
         self.roster = bbref.get_roster(self.abbreviation)
@@ -39,80 +39,80 @@ def check_name(name):
     return name
 
 
-def get_abbreviation(name):
+def get_abbreviation(team_name):
     """Returns the team's abbreviation.
 
-    :param str name: Team name.
+    :param str team_name: Team name.
     """
 
-    if name == "Hawks":
+    if team_name == "Hawks":
         return 'ATL'
-    elif name == "Celtics":
+    elif team_name == "Celtics":
         return 'BOS'
-    elif name == "Nets":
+    elif team_name == "Nets":
         return 'BRK'
-    elif name == "Hornets":
+    elif team_name == "Hornets":
         return 'CHO'
-    elif name == "Bulls":
+    elif team_name == "Bulls":
         return 'CHI'
-    elif name == "Cavaliers":
+    elif team_name == "Cavaliers":
         return 'CLE'
-    elif name == "Pistons":
+    elif team_name == "Pistons":
         return 'DET'
-    elif name == "Pacers":
+    elif team_name == "Pacers":
         return 'IND'
-    elif name == "Heat":
+    elif team_name == "Heat":
         return 'MIA'
-    elif name == "Bucks":
+    elif team_name == "Bucks":
         return 'MIL'
-    elif name == "Knicks":
+    elif team_name == "Knicks":
         return 'NYK'
-    elif name == "Magic":
+    elif team_name == "Magic":
         return 'ORL'
-    elif name == "76ers":
+    elif team_name == "76ers":
         return 'PHI'
-    elif name == "Raptors":
+    elif team_name == "Raptors":
         return 'TOR'
-    elif name == "Wizards":
+    elif team_name == "Wizards":
         return 'WAS'
-    elif name == "Mavericks":
+    elif team_name == "Mavericks":
         return 'DAL'
-    elif name == "Nuggets":
+    elif team_name == "Nuggets":
         return 'DEN'
-    elif name == "Warriors":
+    elif team_name == "Warriors":
         return 'GSW'
-    elif name == "Rockets":
+    elif team_name == "Rockets":
         return 'HOU'
-    elif name == "Clippers":
+    elif team_name == "Clippers":
         return 'LAC'
-    elif name == "Lakers":
+    elif team_name == "Lakers":
         return 'LAL'
-    elif name == "Grizzlies":
+    elif team_name == "Grizzlies":
         return 'MEM'
-    elif name == "Timberwolves":
+    elif team_name == "Timberwolves":
         return 'MIN'
-    elif name == "Pelicans":
+    elif team_name == "Pelicans":
         return 'NOP'
-    elif name == "Thunder":
+    elif team_name == "Thunder":
         return 'OKC'
-    elif name == "Suns":
+    elif team_name == "Suns":
         return 'PHO'
-    elif name == "Trail Blazers":
+    elif team_name == "Trail Blazers":
         return 'POR'
-    elif name == "Kings":
+    elif team_name == "Kings":
         return 'SAC'
-    elif name == "Spurs":
+    elif team_name == "Spurs":
         return 'SAS'
-    elif name == "Jazz":
+    elif team_name == "Jazz":
         return 'UTA'
     else:
-        sys.exit(f"get_abbreviation(): Unrecognized team name: '{name}'")
+        sys.exit(f"get_abbreviation(): Unrecognized team name: '{team_name}'")
 
 
-def get_conference(name):
+def get_conference(team_name):
     """Returns the team's conference
             
-    :param str name: Team name.
+    :param str team_name: Team name.
     """
     
     eastern_teams = {"Hawks", "Celtics", "Nets", "Hornets", "Bulls", 
@@ -122,9 +122,9 @@ def get_conference(name):
                      "Lakers", "Grizzlies", "Timberwolves", "Pelicans", 
                      "Thunder", "Suns", "Trail Blazers", "Kings", "Spurs", 
                      "Jazz"}
-    if name in eastern_teams:
+    if team_name in eastern_teams:
         return "east"
-    elif name in western_teams:
+    elif team_name in western_teams:
         return "west"
     else:
-        sys.exit(f"get_conference(): Unrecognized team name: '{name}'")
+        sys.exit(f"get_conference(): Unrecognized team name: '{team_name}'")

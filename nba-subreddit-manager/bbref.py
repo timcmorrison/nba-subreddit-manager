@@ -9,13 +9,13 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_record(team):
+def get_record(team_abbrevation):
     """Returns the team's record.
 
-    :param str team: The team abbreviation.
+    :param str team_abbreviation: The team abbreviation.
     """
 
-    url = get_team_url(team)
+    url = get_team_url(team_abbrevation)
     team_html = requests.get(url).text
     team_info = BeautifulSoup(team_html, 'html.parser').find(id="info")
     team_record = team_info.find_all("p")[2].text
@@ -23,13 +23,13 @@ def get_record(team):
     return team_record
 
 
-def get_roster(team):
+def get_roster(team_abbreviation):
     """Returns the team's roster.
     
-    :param str team: The team abbreviation.
+    :param str team_abbreviation: The team abbreviation.
     """
 
-    url = get_team_url(team)
+    url = get_team_url(team_abbreviation)
     roster = get_html(url, 0)
     # Only want number, name, and position (the first 3 columns) so it fits
     # in sidebar.
@@ -64,13 +64,13 @@ def get_standings(conference):
     return standings
 
 
-def get_schedule(team):
+def get_schedule(team_abbreviation):
     """ Returns the team's schedule.
 
-    :param str team: The team abbreviation.
+    :param str team_abbreviation: The team abbreviation.
     """
 
-    url = get_schedule_url(team)
+    url = get_schedule_url(team_abbreviation)
     schedule = get_html(url, 0)
     # The schedule DataFrame columns are as follows:
     # [0] Game
@@ -196,13 +196,16 @@ def remove_whitespace(string):
     return string.strip()
 
 
-def get_team_url(team):
+def get_team_url(team_abbreviation):
     """Returns the URL to the team's page.
     
-    param str team: Team abbreviation.
+    param str team_abbreviation: Team abbreviation.
     """
 
-    url = f'https://www.basketball-reference.com/teams/{team}/YEAR.html'
+    url = (
+        f'https://www.basketball-reference.com/teams'
+        f'/{team_abbreviation}/YEAR.html'
+    )
     year = get_year(url)
     return url.replace("YEAR", str(year))
 
@@ -215,13 +218,16 @@ def get_standings_url():
     return url.replace("YEAR", str(year))
 
 
-def get_schedule_url(team):
+def get_schedule_url(team_abbreviation):
     """Returns the URL to the team's schedule page.
     
-    param str team: Team abbreviation.
+    param str team_abbreviation: Team abbreviation.
     """
 
-    url = f'https://www.basketball-reference.com/teams/{team}/YEAR_games.html'
+    url = (
+        f'https://www.basketball-reference.com/teams'
+        f'/{team_abbreviation}/YEAR_games.html'
+    )
     year = get_year(url)
     return url.replace("YEAR", str(year))
 
