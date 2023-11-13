@@ -1,5 +1,6 @@
 """Reddit utilities"""
     
+import os
 import sys
 
 import praw
@@ -42,7 +43,14 @@ def update_sidebar(config, team):
     subreddit_name = config['subreddit']
     calendar_id = config['calendar']
     colors = config['colors']
-    reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
+    try:
+        reddit = praw.Reddit("Spurs Bot", user_agent="r/NBASpurs Bot")
+    except Exception:
+        reddit = praw.Reddit(client_id=os.environ["CLIENT_ID"],
+                             client_secret=os.environ["CLIENT_SECRET"],
+                             password=os.environ["PASSWORD"],
+                             user_agent=os.environ["USER_AGENT"],
+                             username=os.environ["USERNAME"])
     subreddit = reddit.subreddit(subreddit_name)
 
     try:

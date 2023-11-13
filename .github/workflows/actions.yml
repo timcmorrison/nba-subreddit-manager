@@ -30,4 +30,9 @@ jobs:
           SCHEDULE: ${{secrets.SCHEDULE}}
           STANDINGS: ${{secrets.STANDINGS}}
           ROSTER: ${{secrets.ROSTER}}
+          CLIENT_ID: ${{secrets.CLIENT_ID}}
+          CLIENT_SECRET: ${{secrets.CLIENT_SECRET}}
+          PASSWORD: ${{secrets.PASSWORD}}
+          USER_AGENT: ${{secrets.USER_AGENT}}
+          USERNAME: ${{secrets.USERNAME}}
         run: python nba-subreddit-manager/main.py
