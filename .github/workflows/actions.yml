@@ -23,4 +23,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: execute py script
-          run: python main.py
+        env:
+          TEAM: ${{secrets.TEAM}}
+          SUBREDDIT: ${{secrets.SUBREDDIT}}
+          CALENDAR: ${{secrets.CALENDAR}}
+          SCHEDULE: ${{secrets.SCHEDULE}}
+          STANDINGS: ${{secrets.STANDINGS}}
+          ROSTER: ${{secrets.ROSTER}}
+        run: python main.py
