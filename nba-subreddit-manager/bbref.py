@@ -35,6 +35,7 @@ def get_roster(team_abbreviation):
     # in sidebar.
     roster = roster.iloc[:, :3]
     roster['No.'] = roster['No.'].fillna('')
+    roster['No.'] = roster['No.'].astype(str).replace('\.0', '', regex=True)
     roster = roster.set_index('No.')
     return roster
 
@@ -92,7 +93,14 @@ def get_schedule(team_abbreviation):
     # [14] Notes
 
     # Table repeats the headings every 20 games, so get rid of those headings.
-    schedule = schedule.drop([20, 41, 62, 83])
+    schedule = schedule.drop([20, 41, 62])
+    # I think this is due to in season tournament; schedule might not fully be
+    # determined yet
+    try:
+        schedule = schedule.drop[83]
+    except Exception:
+        pass
+
     schedule = schedule.reset_index(drop=True)
     index = get_game_index(schedule)
     schedule = schedule.iloc[index:index+10]
