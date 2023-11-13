@@ -30,4 +30,4 @@ jobs:
           SCHEDULE: ${{secrets.SCHEDULE}}
           STANDINGS: ${{secrets.STANDINGS}}
           ROSTER: ${{secrets.ROSTER}}
-        run: python main.py
+        run: python nba-subreddit-manager/main.py
