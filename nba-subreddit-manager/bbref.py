@@ -79,18 +79,20 @@ def get_schedule(team_abbreviation):
     # [0] Game
     # [1] Date
     # [2] Start (ET)
-    # [3] BLANK
-    # [4] Box Score Link
+    # [3] Blank column for spacing
+    # [4] Box score link
     # [5] @
     # [6] Opponent
     # [7] W/L
     # [8] OT
-    # [9] Team Score
-    # [10] Opponent Score
+    # [9] Team score
+    # [10] Opponent score
     # [11] Win counter
     # [12] Loss counter
     # [13] Streak
-    # [14] Notes
+    # [14] Attendance
+    # [15] Length of game
+    # [16] Notes
 
     # Table repeats the headings every 20 games, so get rid of those headings.
     schedule = schedule.drop(schedule[schedule['G'] == 'G'].index)
@@ -110,9 +112,7 @@ def get_schedule(team_abbreviation):
         ' ' + '**' + schedule.iloc[:, 7] + '**'
     schedule = schedule.fillna("")
     # Columns are prepared - drop the rest and make it Reddit-ready.
-    schedule = schedule.drop(
-        schedule.columns[[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]],
-        axis=1)
+    schedule = schedule.iloc[:, :4]
     schedule.columns = ['G', 'Date & Time (ET)', 'Opponent', 'Score']
     schedule = schedule.set_index('G')
     return schedule
