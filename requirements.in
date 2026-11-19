@@ -1,0 +1,9 @@
+# Generate requirements.txt with: pip-compile requirements.in
+pandas
+lxml            # pandas.read_html
+beautifulsoup4  # pandas.read_html
+html5lib        # pandas.read_html
+requests
+praw
+PyYAML
+tabulate        # DataFrame.to_markdown
